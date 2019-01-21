@@ -1,7 +1,7 @@
 import { DatePipe } from "@angular/common";
 
 export interface IEvent {
-    id: number
+    eventID: number
     name:string
     date:Date
     time?:string

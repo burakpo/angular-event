@@ -3,7 +3,7 @@ import { IEvent} from './shared/index'
 @Component({
   selector: 'event-thumbnail',
   template: `
-    <div [routerLink]="['/events',event.id]" class="well hoverwell thumbnail">
+    <div [routerLink]="['/events',event.eventID]" class="well hoverwell thumbnail">
       <h2>{{event?.name}}</h2>
       <div>Date: {{event?.date}}</div>
       <div [ngStyle]="getStartTimeStyle()" [ngSwitch]="event?.time">Time: {{event?.time}}
