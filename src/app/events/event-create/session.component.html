@@ -1,0 +1,39 @@
+<table class="table">
+        <thead></thead>
+        <tr>
+            <th>Name</th>
+            <th>Presenter</th>
+            <th>Duration</th>
+            <th>Level</th>
+            <th>Abstract</th>
+            <th>Edit</th>
+        </tr>
+        <tr *ngFor="let item of sessions; let i = index;">
+            <td>
+                <div [hidden]="edit && editIndex==i">{{item.name}}</div>
+                <input [(ngModel)]="item.name" [hidden]="!edit" *ngIf="editIndex == i" />
+            </td>
+            <td>
+                <div [hidden]="edit && editIndex==i">{{item.presenter}}</div>
+                <input [(ngModel)]="item.presenter" [hidden]="!edit"  *ngIf="editIndex == i" />
+            </td>
+            <td>
+                <div [hidden]="edit && editIndex==i">{{item.duration}}</div>
+                <input [(ngModel)]="item.duration" [hidden]="!edit"   *ngIf="editIndex == i"/>
+    
+            </td>
+            <td>
+                <div [hidden]="edit && editIndex==i">{{item.level}}</div>
+                <input [(ngModel)]="item.level" [hidden]="!edit"  *ngIf="editIndex == i"/>
+    
+            </td>
+            <td>
+                <div [hidden]="edit && editIndex==i">{{item.abstract}}</div>
+                <input [(ngModel)]="item.abstract" [hidden]="!edit"  *ngIf="editIndex == i" />
+            </td>
+            <td>
+                <button type="button" class="btn btn-default" (click)="editEvent(i)" [hidden]="editIndex == i">Edit</button>
+                <button type="button" class="btn btn-default" (click)="closeEditEvent(i)" [hidden]="editIndex != i">Close Edit</button>
+            </td>
+        </tr>
+    </table>

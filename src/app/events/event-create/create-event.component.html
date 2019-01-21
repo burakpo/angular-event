@@ -1,0 +1,72 @@
+<h1>New Event</h1>
+<hr>
+<div class="container">
+<div class="col-md-6">
+    <form [formGroup]="eventForm" (ngSubmit)="saveEvent(eventForm.value)" autocomplete="off" novalidate>
+        <div class="form-group">
+            <label for="eventName">Event Name:</label>
+            <input formControlName="eventName" id="eventName" type="text" class="form-control" placeholder="Event Name..." />
+        </div>
+        <div class="form-group">
+            <label for="date">Date: </label>
+            <input formControlName="date" id="date" type="date" class="form-control" placeholder="Date..." />
+        </div>
+        <div class="form-group">
+            <label for="price">Price: </label>
+            <input formControlName="price" id="price" type="number" class="form-control" placeholder="Price..." />
+        </div>
+        <div class="form-group">
+            <label for="imageUrl">Image Url: </label>
+            <input formControlName="imageUrl" id="imageUrl" type="text" class="form-control" placeholder="Image Url..." />
+        </div>
+        <div class="form-group">
+            <label for="onlineUrl">Online Url: </label>
+            <input formControlName="onlineUrl" id="onlineUrl" type="text" class="form-control" placeholder="Online Url..." />
+        </div>
+        <h4>Location</h4>
+        <div class="form-group">
+            <label for="address">Address: </label>
+            <input formControlName="address" id="address" type="text" class="form-control" placeholder="Address..." />
+        </div>
+        <div class="form-group">
+            <label for="city">City: </label>
+            <input formControlName="city" id="city" type="text" class="form-control" placeholder="City..." />
+        </div>
+        <div class="form-group">
+            <label for="country">Country: </label>
+            <input formControlName="country" id="country" type="text" class="form-control" placeholder="Country..." />
+        </div>
+        <event-session [(ev-sessions)]="Sessions" [hidden]="!Sessions.length > 0"></event-session>
+        <div [hidden]="!showSession">
+            <h4>Session</h4>
+            <div class="form-group">
+                <label for="sessionName">Name: </label>
+                <input formControlName="sessionName" id="sessionName" type="text" class="form-control" placeholder="Name..." />
+            </div>
+            <div class="form-group">
+                <label for="presenter">Presenter: </label>
+                <input formControlName="presenter" id="presenter" type="text" class="form-control" placeholder="Presenter..." />
+            </div>
+            <div class="form-group">
+                <label for="duration">Duration: </label>
+                <input formControlName="duration" id="duration" type="number" class="form-control" placeholder="Duration..." />
+            </div>
+            <div class="form-group">
+                <label for="level">Level: </label>
+                <input formControlName="level" id="level" type="text" class="form-control" placeholder="Level..." />
+            </div>
+            <div class="form-group">
+                <label for="abstract">Abstract: </label>
+                <input formControlName="abstract" id="abstract" type="text" class="form-control" placeholder="Abstract..." />
+            </div>
+            <button type="button" (click)="addSession(eventForm.value)" class="btn btn-primary">Add Session</button>
+        </div>
+        <button type="button" (click)="showSession= true" [hidden]="showSession" class="btn btn-primary">Add Session</button>
+
+        <br>
+        <br>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+    </form>
+</div>
+</div>
