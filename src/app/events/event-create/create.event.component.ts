@@ -1,4 +1,4 @@
-import { Component, Input,ChangeDetectionStrategy ,ChangeDetectorRef } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { FormGroup, FormControl } from "@angular/forms";
 import { ISession, IEvent } from "../shared/event.model";
 import { HttpClient } from "@angular/common/http";
@@ -6,15 +6,9 @@ import { Subject } from "rxjs";
 
 @Component({
     templateUrl: "./create.event.component.html",
-    selector: "ev-create-update-event",changeDetection:ChangeDetectionStrategy.OnPush
+    selector: "ev-create-update-event"
 })
 export class CreateUpdateEventComponent {
-
-    private name: string;
-    private date: Date;
-    private price: number;
-    private imageUrl: string;
-
     eventForm: FormGroup;
     private EventName: FormControl;
     private EventDate: FormControl;
@@ -31,13 +25,13 @@ export class CreateUpdateEventComponent {
     private Abstract: FormControl;
     private Sessions: ISession[] = [];
     private showSession: boolean = false;
-    @Input("event-function") eventFunction: Subject<any>;
-    constructor(private http: HttpClient,private cdRef:ChangeDetectorRef) {
+    private updateForm: boolean = false;
+    @Input("event-function") eventFunction: Subject<IEvent>;
+    constructor(private http: HttpClient) {
     }
     ngAfterViewInit(): void {
         //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
         //Add 'implements AfterViewInit' to the class.
-        this.cdRef.detectChanges();
     }
     ngOnInit(): void {
         this.EventDate = new FormControl();
@@ -69,13 +63,21 @@ export class CreateUpdateEventComponent {
             level: this.Level,
             abstract: this.Abstract
         });
-        this.eventFunction.subscribe(v => {
-            this.name = v.name;
-            this.price = v.price;
-            this.date = new Date (v.date);
-            this.imageUrl = v.imageUrl;
 
-        });
+        if (this.eventFunction) {
+            this.eventFunction.subscribe(v => {
+                this.eventForm.controls["eventName"].setValue(v.name);
+                this.eventForm.controls["date"].setValue(new Date(v.date).toISOString().substring(0, 10));
+                this.eventForm.controls["price"].setValue(v.price);
+                this.eventForm.controls["imageUrl"].setValue(v.imageUrl);
+                this.eventForm.controls["onlineUrl"].setValue(v.onlineUrl);
+                this.eventForm.controls["address"].setValue(v.location.address);
+                this.eventForm.controls["city"].setValue(v.location.city);
+                this.eventForm.controls["country"].setValue(v.location.country);
+                this.Sessions = v.sessions;
+                this.updateForm = true;
+            });
+        }
     }
 
     saveEvent(formValues) {
@@ -93,14 +95,23 @@ export class CreateUpdateEventComponent {
             },
             sessions: this.Sessions
         };
-        this.http.post("http://localhost:21888/api/events", event).toPromise<any>().then(e => {
-            if (e.value.isSuccess) {
-                alert("başarılı");
-                this.eventForm.reset();
-                this.Sessions = [];
-            }
-        });
-        this.showSession = false;
+        if (this.updateForm) {
+            this.http.put("http://localhost:21888/api/events", event).toPromise<any>().then(e => {
+                if (e.value.isSuccess) {
+                    alert("update başarılı");
+                }
+            });
+        }
+        else {
+            this.http.post("http://localhost:21888/api/events", event).toPromise<any>().then(e => {
+                if (e.value.isSuccess) {
+                    alert("kayıt başarılı");
+                    this.eventForm.reset();
+                    this.Sessions = [];
+                }
+            });
+            this.showSession = false;
+        }
     }
     addSession(formValues) {
         let session = <ISession>{
