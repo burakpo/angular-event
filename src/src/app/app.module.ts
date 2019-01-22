@@ -21,6 +21,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { AuthGuard } from './user/auth.guard.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EventSessionComponent } from './events/event-create/session.component';
+import { EventDelete } from './events/event-delete/event-delete.component';
+import { CreateUpdateEventComponent } from './events/event-create/create.event.component';
+import { EventUpdate } from './events/event-update/event-update.component';
 
 
 @NgModule({
@@ -33,7 +36,10 @@ import { EventSessionComponent } from './events/event-create/session.component';
     Error404Component,
     NavBarComponent,
     SessionListComponent,
-    EventSessionComponent
+    EventSessionComponent,
+    EventDelete,
+    EventUpdate,
+    CreateUpdateEventComponent
   ],
   imports: [
     BrowserModule,

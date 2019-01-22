@@ -1,19 +1,20 @@
-import { Component, OnInit } from '@angular/core'
-import { Router } from '@angular/router';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { IEvent, ISession } from '../shared/event.model';
-import { HttpClient } from '@angular/common/http';
+import { Component, Input,ChangeDetectionStrategy ,ChangeDetectorRef } from "@angular/core";
+import { FormGroup, FormControl } from "@angular/forms";
+import { ISession, IEvent } from "../shared/event.model";
+import { HttpClient } from "@angular/common/http";
+import { Subject } from "rxjs";
 
 @Component({
-    templateUrl: 'create-event.component.html',
-    styles: [`
-    em { float:right; color:#E05C65; padding-left:10px;}
-`]
+    templateUrl: "./create.event.component.html",
+    selector: "ev-create-update-event",changeDetection:ChangeDetectionStrategy.OnPush
 })
+export class CreateUpdateEventComponent {
 
-export class CreateEventComponent implements OnInit {
+    private name: string;
+    private date: Date;
+    private price: number;
+    private imageUrl: string;
 
-    isDirty: boolean = true;
     eventForm: FormGroup;
     private EventName: FormControl;
     private EventDate: FormControl;
@@ -30,8 +31,14 @@ export class CreateEventComponent implements OnInit {
     private Abstract: FormControl;
     private Sessions: ISession[] = [];
     private showSession: boolean = false;
-    constructor(private http: HttpClient, private router: Router) { }
-
+    @Input("event-function") eventFunction: Subject<any>;
+    constructor(private http: HttpClient,private cdRef:ChangeDetectorRef) {
+    }
+    ngAfterViewInit(): void {
+        //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+        //Add 'implements AfterViewInit' to the class.
+        this.cdRef.detectChanges();
+    }
     ngOnInit(): void {
         this.EventDate = new FormControl();
         this.EventName = new FormControl();
@@ -62,13 +69,18 @@ export class CreateEventComponent implements OnInit {
             level: this.Level,
             abstract: this.Abstract
         });
+        this.eventFunction.subscribe(v => {
+            this.name = v.name;
+            this.price = v.price;
+            this.date = new Date (v.date);
+            this.imageUrl = v.imageUrl;
+
+        });
     }
-    cancel() {
-        this.router.navigate(['/events']);
-    }
+
     saveEvent(formValues) {
         let event = <IEvent>{
-            id: 1,
+            eventID: 0,
             name: formValues.eventName,
             date: formValues.date,
             price: formValues.price,

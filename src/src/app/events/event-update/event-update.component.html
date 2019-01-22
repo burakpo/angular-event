@@ -1,0 +1,31 @@
+<div>
+    <table class="table">
+        <thead></thead>
+        <tr>
+            <th>EventID</th>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Price</th>
+            <th>Update</th>
+        </tr>
+        <tr *ngFor="let item of events;">
+            <td>
+                <div>{{item.eventID}}</div>
+            </td>
+            <td>
+                <div>{{item.name}}</div>
+            </td>
+            <td>
+                <div>{{item.date}}</div>
+
+            </td>
+            <td>
+                <div>{{item.price}}</div>
+            </td>
+            <td>
+                <button type="button" class="btn btn-default" (click)="eventUpdate(item.eventID)">Update</button>
+            </td>
+        </tr>
+    </table>
+</div>
+<ev-create-update-event [hidden]="!eventSelected" [(event-function)]="changingValue"></ev-create-update-event>
