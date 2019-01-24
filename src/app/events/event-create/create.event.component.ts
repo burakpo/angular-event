@@ -1,8 +1,10 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, Output } from "@angular/core";
 import { FormGroup, FormControl } from "@angular/forms";
 import { ISession, IEvent } from "../shared/event.model";
 import { HttpClient } from "@angular/common/http";
 import { Subject } from "rxjs";
+import { EventEmitter } from "@angular/core";
+import { EventService } from "../shared";
 
 @Component({
     templateUrl: "./create.event.component.html",
@@ -10,6 +12,7 @@ import { Subject } from "rxjs";
 })
 export class CreateUpdateEventComponent {
     eventForm: FormGroup;
+    private EventID: FormControl;
     private EventName: FormControl;
     private EventDate: FormControl;
     private Price: FormControl;
@@ -27,13 +30,15 @@ export class CreateUpdateEventComponent {
     private showSession: boolean = false;
     private updateForm: boolean = false;
     @Input("event-function") eventFunction: Subject<IEvent>;
-    constructor(private http: HttpClient) {
+    @Output("event-update-success") eventUpdateSuccess : EventEmitter<any> = new EventEmitter();
+    constructor(private eventService:EventService, private http: HttpClient) {
     }
     ngAfterViewInit(): void {
         //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
         //Add 'implements AfterViewInit' to the class.
     }
     ngOnInit(): void {
+        this.EventID = new FormControl();
         this.EventDate = new FormControl();
         this.EventName = new FormControl();
         this.Price = new FormControl();
@@ -49,6 +54,7 @@ export class CreateUpdateEventComponent {
         this.Abstract = new FormControl();
 
         this.eventForm = new FormGroup({
+            eventID : this.EventID,
             eventName: this.EventName,
             date: this.EventDate,
             price: this.Price,
@@ -66,6 +72,7 @@ export class CreateUpdateEventComponent {
 
         if (this.eventFunction) {
             this.eventFunction.subscribe(v => {
+                this.eventForm.controls["eventID"].setValue(v.eventID);
                 this.eventForm.controls["eventName"].setValue(v.name);
                 this.eventForm.controls["date"].setValue(new Date(v.date).toISOString().substring(0, 10));
                 this.eventForm.controls["price"].setValue(v.price);
@@ -82,7 +89,7 @@ export class CreateUpdateEventComponent {
 
     saveEvent(formValues) {
         let event = <IEvent>{
-            eventID: 0,
+            eventID: formValues.eventID == null ? 0 : formValues.eventID,
             name: formValues.eventName,
             date: formValues.date,
             price: formValues.price,
@@ -96,16 +103,17 @@ export class CreateUpdateEventComponent {
             sessions: this.Sessions
         };
         if (this.updateForm) {
-            this.http.put("http://localhost:21888/api/events", event).toPromise<any>().then(e => {
+           this.eventService.updateEvent(event).toPromise().then(e => {
                 if (e.value.isSuccess) {
-                    alert("update başarılı");
+                    console.log(e.value.entity);
+                    this.eventUpdateSuccess.emit(null);
                 }
             });
         }
         else {
-            this.http.post("http://localhost:21888/api/events", event).toPromise<any>().then(e => {
+            this.eventService.createEvent(event).toPromise().then(e => {
                 if (e.value.isSuccess) {
-                    alert("kayıt başarılı");
+                    console.log(e.value.entity);
                     this.eventForm.reset();
                     this.Sessions = [];
                 }
@@ -113,6 +121,7 @@ export class CreateUpdateEventComponent {
             this.showSession = false;
         }
     }
+
     addSession(formValues) {
         let session = <ISession>{
             name: formValues.sessionName,

@@ -28,4 +28,4 @@
         </tr>
     </table>
 </div>
-<ev-create-update-event [hidden]="!eventSelected" [(event-function)]="changingValue"></ev-create-update-event>
+<ev-create-update-event [hidden]="!eventSelected" (event-update-success)="updateSuccess($event)" [(event-function)]="changingValue"></ev-create-update-event>

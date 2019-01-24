@@ -1,8 +1,6 @@
 import { Component } from '@angular/core'
-import { EventService } from 'src/app/events/shared/event.service';
-import { ToastrService } from 'src/app/common/toastr.service';
 import { ActivatedRoute } from '@angular/router';
-import { IEvent } from './shared';
+import { IEvent, EventService } from './shared';
 
 @Component({
   template: `
@@ -19,7 +17,7 @@ import { IEvent } from './shared';
 export class EventsListComponent {
   events:IEvent[]
 
-  constructor(private eventService: EventService, private toastr: ToastrService,private router:ActivatedRoute) {
+  constructor(private eventService: EventService,private router:ActivatedRoute) {
     
   }
 
@@ -28,6 +26,6 @@ export class EventsListComponent {
   }
 
   handleThumbnailClick(eventName) {
-    this.toastr.success(eventName)
+    
   }
 }

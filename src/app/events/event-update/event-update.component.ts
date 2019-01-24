@@ -15,13 +15,20 @@ export class EventUpdate implements OnInit{
     }
 
     ngOnInit(): void {
-        this.eventService.getEvents().toPromise<any>().then(e => {
-            this.events = e;
+        this.getEvents();
+    }
+    getEvents(){
+        this.eventService.getEvents().toPromise().then(e => {
+            this.events = e.value.entity;
         });
     }
     eventUpdate(id: number){
         this.updateEventItem = this.eventService.getEvent(id);
         this.changingValue.next(this.updateEventItem);
         this.eventSelected = true;
+    }
+    updateSuccess(event){
+        this.eventSelected = false;
+        this.getEvents();
     }
 }

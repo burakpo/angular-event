@@ -24,3 +24,15 @@ export interface ISession {
     abstract: string
     voters: string []
 }
+
+export interface IResponseModel<T> {
+    contentTypes: any[];
+    declaredTypes: any;
+    formatters: any[];
+    statusCode: number;
+    value : IValue<T>;
+}
+export interface IValue<T>{
+    entity : T;
+    isSuccess: boolean;
+}

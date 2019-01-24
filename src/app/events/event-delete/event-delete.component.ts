@@ -12,27 +12,27 @@ export class EventDelete implements OnInit {
 
     }
     ngOnInit(): void {
-      this.getEvents();
+        this.getEvents();
     }
     deleteEvent(id: number) {
-        if(this.checkDirtyState()){
-        this.eventService.deleteEvent(id).toPromise<any>().then(e => {
-            if (e.value.isSuccess) {
-                alert("başarılı");
-                this.getEvents();
-            }
-            else{
-                alert("başarısız");
-            }
-        });
+        if (this.checkDirtyState()) {
+            this.eventService.deleteEvent(id).toPromise<any>().then(e => {
+                if (e.value.isSuccess) {
+                    console.log("başarılı")
+                    this.getEvents();
+                }
+                else {
+                    console.log("başarılı")
+                }
+            });
+        }
     }
-    }
-    getEvents(){
+    getEvents() {
         this.eventService.getEvents().toPromise().then(e => {
-            this.events = e;
+            this.events = e.value.entity;
         });
     }
-    checkDirtyState() : boolean{
-          return window.confirm("Do you really want to delete this event?");
+    checkDirtyState(): boolean {
+        return window.confirm("Do you really want to delete this event?");
     }
 }
